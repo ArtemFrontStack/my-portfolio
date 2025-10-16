@@ -1,13 +1,11 @@
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import {
-	useScrollAnimation,
-	useStaggerAnimation,
-} from '@/hooks/useGsapAnimation'
-import { useTilt } from '@/hooks/useTilt'
-import { Briefcase, Code2, ExternalLink, Github } from 'lucide-react'
-import { useState } from 'react'
+import {Badge} from '@/components/ui/badge'
+import {Button} from '@/components/ui/button'
+import {useScrollAnimation, useStaggerAnimation,} from '@/hooks/useGsapAnimation'
+import {useTilt} from '@/hooks/useTilt'
+import {Briefcase, Code2, ExternalLink, Github} from 'lucide-react'
+import {useState} from 'react'
 import ProjectModal from '../features/ProjectModal'
+import quizImg from '@/assets/projects/quiz.png'
 
 const ProjectCard = ({ project, index, onClick }: any) => {
 	const tiltRef = useTilt({ max: 10, scale: 1.02 })
@@ -110,118 +108,67 @@ const Projects = () => {
 	const projectsRef = useStaggerAnimation()
 
 	const projects = [
+
+
+
 		{
-			title: 'Portfolio Website',
-			description:
-				'Интерактивное портфолио с анимациями, темной темой и адаптивным дизайном',
+			title: 'Quiz Fullstack',
+			description: 'Полноценное приложение для создания и прохождения онлайн-викторин',
 			fullDescription:
-				'Современное портфолио-сайт, построенное на React, TypeScript и Tailwind CSS. Включает плавные анимации при прокрутке, переключение темной/светлой темы, циклическую анимацию текста и полностью адаптивный дизайн. Оптимизировано для производительности с использованием Vite.',
-			tags: ['React', 'TypeScript', 'Tailwind CSS', 'Vite'],
+				'Quiz Fullstack — это современное fullstack-приложение для создания, редактирования и прохождения викторин. Реализована регистрация пользователей, создание собственных тестов, прохождение чужих викторин, подсчет результатов и рейтинг. Используются современные технологии фронтенда и бэкенда.',
+			tags: ['React', 'TypeScript', 'Node.js', 'Express', 'MongoDB', 'Fullstack'],
 			image:
-				'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&auto=format&fit=crop&q=80',
-			github: 'https://github.com/CyberArt2718281/portfolio',
-			demo: '#',
+			quizImg,
+			github: 'https://github.com/CyberArt2718281/quiz-fullstack',
+			demo: '',
 			features: [
-				'Циклическая анимация печатающегося текста',
-				'Плавные анимации при скролле',
-				'Адаптивный дизайн для всех устройств',
-				'Модальные окна с деталями проектов',
-				'Форма обратной связи',
+				'Регистрация и авторизация пользователей',
+				'Создание и редактирование викторин',
+				'Прохождение тестов и подсчет результатов',
+				'Рейтинг пользователей',
+				'Адаптивный дизайн',
 			],
-		},
+		}
+
+		,
 		{
-			title: 'React Todo App',
-			description:
-				'Многофункциональный менеджер задач с фильтрацией, поиском и темной темой',
+			title: 'Crypto Site',
+			description: 'Современный сайт для отслеживания криптовалют с графиками и поиском',
 			fullDescription:
-				'Приложение для управления задачами с возможностью добавления, редактирования, удаления и отметки задач. Включает фильтрацию по статусу, поиск, сортировку и сохранение данных в Local Storage. Поддерживает темную и светлую темы.',
-			tags: ['React', 'TypeScript', 'Local Storage', 'CSS Modules'],
+				'Crypto Site — это современное SPA-приложение на React и TypeScript для мониторинга криптовалют. Реализован поиск, подробная информация по монетам, интерактивные графики, сортировка и фильтрация. Используется CoinGecko API, реализована адаптивная верстка и тёмная тема. Проект оптимизирован для быстрой загрузки и удобства пользователя.',
+			tags: ['React', 'TypeScript', 'Tailwind CSS', 'CoinGecko API', 'Chart.js', 'Vite'],
 			image:
-				'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=800&h=600&auto=format&fit=crop&q=80',
-			github: 'https://github.com/tastejs/todomvc',
-			demo: 'https://todomvc.com/examples/react/',
+				'https://raw.githubusercontent.com/CyberArt2718281/crypto-site/main/public/preview.png',
+			github: 'https://github.com/CyberArt2718281/crypto-site',
+			demo: 'https://crypto-site-lilac.vercel.app/',
 			features: [
-				'CRUD операции с задачами',
-				'Фильтрация и сортировка',
-				'Поиск по задачам',
-				'Сохранение в Local Storage',
-				'Темная/светлая тема',
-			],
-		},
-		{
-			title: 'GitHub Profile Finder',
-			description:
-				'Приложение для поиска пользователей GitHub с визуализацией статистики',
-			fullDescription:
-				'Интерактивное приложение для поиска профилей GitHub. Использует GitHub API для получения информации о пользователях, их репозиториях и статистике. Включает красивую визуализацию данных и адаптивный дизайн.',
-			tags: ['React', 'GitHub API', 'Axios', 'Tailwind CSS'],
-			image:
-				'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=800&h=600&auto=format&fit=crop&q=80',
-			github: 'https://github.com/bchiang7/github-user-search-app',
-			demo: '#',
-			features: [
-				'Поиск пользователей GitHub',
-				'Отображение профиля и репозиториев',
-				'Статистика активности',
-				'История поисков',
+				'Поиск и фильтрация криптовалют',
+				'Просмотр подробной информации о монетах',
+				'Интерактивные графики цен',
+				'Сортировка по капитализации, цене и изменению',
 				'Адаптивный дизайн',
 			],
 		},
+
 		{
-			title: 'Weather App',
-			description: 'Погодное приложение с прогнозом на 7 дней и геолокацией',
+			title: 'Posts Platform',
+			description: 'Платформа для публикации и обсуждения постов',
 			fullDescription:
-				'Современное погодное приложение с использованием OpenWeatherMap API. Показывает текущую погоду, почасовой и недельный прогноз. Поддерживает автоматическое определение местоположения и поиск по городам. Красивая визуализация данных с иконками погоды.',
-			tags: ['React', 'OpenWeather API', 'Geolocation', 'Chart.js'],
+				'Posts Platform — это современное веб-приложение для создания, публикации и обсуждения постов. Пользователи могут регистрироваться, создавать собственные публикации, комментировать и лайкать посты других участников. Реализованы фильтрация, поиск, адаптивный дизайн и удобный интерфейс.',
+			tags: ['React', 'TypeScript', 'Node.js', 'Express', 'MongoDB', 'Vite'],
 			image:
-				'https://images.unsplash.com/photo-1592210454359-9043f067919b?w=800&h=600&auto=format&fit=crop&q=80',
-			github: 'https://github.com/Ovi/DummyJSON',
-			demo: 'https://openweathermap.org/',
+				'https://raw.githubusercontent.com/ArtemFrontStack/posts-platform/main/public/preview.png',
+			github: 'https://github.com/ArtemFrontStack/posts-platform',
+			demo: 'https://posts-platform.vercel.app/',
 			features: [
-				'Текущая погода и прогноз',
-				'Автоопределение локации',
-				'Поиск по городам',
-				'Интерактивные графики',
-				'Сохранение избранных городов',
-			],
-		},
-		{
-			title: 'E-Commerce Store',
-			description:
-				'Интернет-магазин с корзиной, фильтрацией и интеграцией платежей',
-			fullDescription:
-				'Полнофункциональный интернет-магазин с каталогом товаров, корзиной покупок, фильтрацией и сортировкой. Использует Context API для управления состоянием, React Router для навигации. Включает интеграцию с mock API для демонстрации функционала.',
-			tags: ['React', 'Context API', 'React Router', 'Stripe'],
-			image:
-				'https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=800&h=600&auto=format&fit=crop&q=80',
-			github: 'https://github.com/safak/youtube2022/tree/react-shop',
-			demo: '#',
-			features: [
-				'Каталог товаров с фильтрацией',
-				'Корзина покупок',
-				'Избранное',
+				'Публикация и редактирование постов',
+				'Комментарии и лайки',
+				'Регистрация и авторизация',
+				'Поиск и фильтрация публикаций',
 				'Адаптивный дизайн',
-				'Интеграция с API',
 			],
-		},
-		{
-			title: 'Chat Application',
-			description: 'Чат в реальном времени с комнатами и отправкой файлов',
-			fullDescription:
-				'Приложение для обмена сообщениями в реальном времени. Использует WebSocket для мгновенной доставки сообщений. Поддерживает создание комнат, отправку изображений и файлов, индикаторы набора текста и статус онлайн.',
-			tags: ['React', 'Socket.io', 'Node.js', 'Express'],
-			image:
-				'https://images.unsplash.com/photo-1611606063065-ee7946f0787a?w=800&h=600&auto=format&fit=crop&q=80',
-			github: 'https://github.com/adrianhajdin/project_chat_application',
-			demo: '#',
-			features: [
-				'Сообщения в реальном времени',
-				'Создание комнат',
-				'Отправка файлов и изображений',
-				'Индикатор набора текста',
-				'История сообщений',
-			],
-		},
+		}
+	
 	]
 
 	const allTags = ['All', ...Array.from(new Set(projects.flatMap(p => p.tags)))]
