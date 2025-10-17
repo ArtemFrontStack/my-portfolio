@@ -2,18 +2,10 @@ import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
 import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle,} from '@/components/ui/dialog'
 import {CheckCircle2, ExternalLink, Github, Sparkles} from 'lucide-react'
+import {Project} from "@/types/project.ts";
 
 interface ProjectModalProps {
-	project: {
-		title: string
-		description: string
-		fullDescription: string
-		tags: string[]
-		image: string
-		github: string
-		demo: string
-		features: string[]
-	}
+	project: Project
 	isOpen: boolean
 	onClose: () => void
 }
@@ -45,7 +37,7 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
 							{/* Enhanced image with overlay */}
 							<div className='relative h-56 md:h-80 rounded-xl overflow-hidden group'>
 								<img
-									src={project.image}
+									src={project.image_url}
 									alt={project.title}
 									className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-105'
 								/>
@@ -63,7 +55,7 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
 									</h3>
 								</div>
 								<p className='text-sm md:text-base text-muted-foreground leading-relaxed'>
-									{project.fullDescription}
+									{project.full_description}
 								</p>
 							</div>
 
@@ -116,7 +108,7 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
 								asChild
 							>
 								<a
-									href={project.demo}
+									href={project.demo_url}
 									target='_blank'
 									rel='noopener noreferrer'
 								>
@@ -130,7 +122,7 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
 								asChild
 							>
 								<a
-									href={project.github}
+									href={project.github_url}
 									target='_blank'
 									rel='noopener noreferrer'
 								>

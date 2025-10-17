@@ -34,6 +34,7 @@ const Hero = () => {
 	}
 
 	return (
+
 		<section
 			className='relative min-h-screen h-screen flex items-center justify-center overflow-hidden'
 			style={{
@@ -155,6 +156,7 @@ const Hero = () => {
 					</div>
 				</div>
 			</div>
+
 		</section>
 	)
 }

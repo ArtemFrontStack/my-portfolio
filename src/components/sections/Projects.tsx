@@ -3,11 +3,19 @@ import {Button} from '@/components/ui/button'
 import {useScrollAnimation, useStaggerAnimation,} from '@/hooks/useGsapAnimation'
 import {useTilt} from '@/hooks/useTilt'
 import {Briefcase, Code2, ExternalLink, Github} from 'lucide-react'
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import ProjectModal from '../features/ProjectModal'
-import quizImg from '@/assets/projects/quiz.png'
+import {ProjectService} from "@/services/projectService.ts";
+import {Project} from "@/types/project.ts";
 
-const ProjectCard = ({ project, index, onClick }: any) => {
+
+// Типизация пропсов ProjectCard
+interface ProjectCardProps {
+  project: Project;
+  onClick: () => void;
+}
+
+const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
 	const tiltRef = useTilt({ max: 10, scale: 1.02 })
 
 	return (
@@ -21,7 +29,7 @@ const ProjectCard = ({ project, index, onClick }: any) => {
 		>
 			<div className='relative h-52 overflow-hidden bg-secondary/20'>
 				<img
-					src={project.image}
+					src={project.image_url}
 					alt={project.title}
 					className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-700'
 					loading='lazy'
@@ -77,7 +85,7 @@ const ProjectCard = ({ project, index, onClick }: any) => {
 						className='flex-1 border-primary/30 hover:bg-primary/10 hover:border-primary/50 smooth-scale hover:scale-105'
 						onClick={e => {
 							e.stopPropagation()
-							window.open(project.github, '_blank')
+							window.open(project.github_url, '_blank')
 						}}
 					>
 						<Github className='w-4 h-4 mr-2' />
@@ -88,7 +96,7 @@ const ProjectCard = ({ project, index, onClick }: any) => {
 						className='flex-1 bg-gradient-primary hover:opacity-90 shadow-lg shadow-primary/20 smooth-scale hover:scale-105'
 						onClick={e => {
 							e.stopPropagation()
-							window.open(project.demo, '_blank')
+							window.open(project.demo_url, '_blank')
 						}}
 					>
 						<ExternalLink className='w-4 h-4 mr-2' />
@@ -101,80 +109,88 @@ const ProjectCard = ({ project, index, onClick }: any) => {
 }
 
 const Projects = () => {
-	const [selectedProject, setSelectedProject] = useState<number | null>(null)
+	const [selectedProject, setSelectedProject] = useState<Project | null>(null)
 	const [filter, setFilter] = useState<string>('All')
 	const titleRef = useScrollAnimation('slideUp')
 	const filterRef = useScrollAnimation('fadeIn')
 	const projectsRef = useStaggerAnimation()
 
-	const projects = [
+	const [projects, setProjects] = useState<Project[]>([])
+	const [loading, setLoading] = useState<boolean>(true)
+	const [error, setError] = useState<string | null>(null)
 
-
-
-		{
-			title: 'Quiz Fullstack',
-			description: 'Полноценное приложение для создания и прохождения онлайн-викторин',
-			fullDescription:
-				'Quiz Fullstack — это современное fullstack-приложение для создания, редактирования и прохождения викторин. Реализована регистрация пользователей, создание собственных тестов, прохождение чужих викторин, подсчет результатов и рейтинг. Используются современные технологии фронтенда и бэкенда.',
-			tags: ['React', 'TypeScript', 'Node.js', 'Express', 'MongoDB', 'Fullstack'],
-			image:
-			quizImg,
-			github: 'https://github.com/CyberArt2718281/quiz-fullstack',
-			demo: '',
-			features: [
-				'Регистрация и авторизация пользователей',
-				'Создание и редактирование викторин',
-				'Прохождение тестов и подсчет результатов',
-				'Рейтинг пользователей',
-				'Адаптивный дизайн',
-			],
+	useEffect(() => {
+		const loadProjects = async () => {
+			try {
+				setLoading(true)
+				const projectsData = await ProjectService.getAllProjects()
+				setProjects(projectsData)
+			} catch (err) {
+				setError(err instanceof Error ? err.message : 'Ошибка загрузки проектов')
+				console.error('Error loading projects:', err)
+			} finally {
+				setLoading(false)
+			}
 		}
 
-		,
-		{
-			title: 'Crypto Site',
-			description: 'Современный сайт для отслеживания криптовалют с графиками и поиском',
-			fullDescription:
-				'Crypto Site — это современное SPA-приложение на React и TypeScript для мониторинга криптовалют. Реализован поиск, подробная информация по монетам, интерактивные графики, сортировка и фильтрация. Используется CoinGecko API, реализована адаптивная верстка и тёмная тема. Проект оптимизирован для быстрой загрузки и удобства пользователя.',
-			tags: ['React', 'TypeScript', 'Tailwind CSS', 'CoinGecko API', 'Chart.js', 'Vite'],
-			image:
-				'https://raw.githubusercontent.com/CyberArt2718281/crypto-site/main/public/preview.png',
-			github: 'https://github.com/CyberArt2718281/crypto-site',
-			demo: 'https://crypto-site-lilac.vercel.app/',
-			features: [
-				'Поиск и фильтрация криптовалют',
-				'Просмотр подробной информации о монетах',
-				'Интерактивные графики цен',
-				'Сортировка по капитализации, цене и изменению',
-				'Адаптивный дизайн',
-			],
-		},
-
-		{
-			title: 'Posts Platform',
-			description: 'Платформа для публикации и обсуждения постов',
-			fullDescription:
-				'Posts Platform — это современное веб-приложение для создания, публикации и обсуждения постов. Пользователи могут регистрироваться, создавать собственные публикации, комментировать и лайкать посты других участников. Реализованы фильтрация, поиск, адаптивный дизайн и удобный интерфейс.',
-			tags: ['React', 'TypeScript', 'Node.js', 'Express', 'MongoDB', 'Vite'],
-			image:
-				'https://raw.githubusercontent.com/ArtemFrontStack/posts-platform/main/public/preview.png',
-			github: 'https://github.com/ArtemFrontStack/posts-platform',
-			demo: 'https://posts-platform.vercel.app/',
-			features: [
-				'Публикация и редактирование постов',
-				'Комментарии и лайки',
-				'Регистрация и авторизация',
-				'Поиск и фильтрация публикаций',
-				'Адаптивный дизайн',
-			],
-		}
-	
-	]
+		loadProjects()
+	}, [])
 
 	const allTags = ['All', ...Array.from(new Set(projects.flatMap(p => p.tags)))]
 	const filteredProjects =
 		filter === 'All' ? projects : projects.filter(p => p.tags.includes(filter))
 
+	if (loading) {
+		return (
+			<section id='projects' className='py-20 bg-gradient-subtle relative overflow-hidden'>
+				<div className='container mx-auto px-4 relative z-10'>
+					<div className='text-center'>
+						<h2 className='text-4xl md:text-5xl lg:text-6xl font-bold mb-4 bg-gradient-primary bg-clip-text text-transparent'>
+							{'<Проекты/>'}
+						</h2>
+						<div className="flex justify-center items-center mt-8">
+							<div className="loader w-[120px] h-[120px] flex flex-col items-center justify-center">
+								<svg width="100" height="100" viewBox="0 0 100 100">
+									<defs>
+										<mask id="clipping">
+											<polygon points="0,0 100,0 100,100 0,100" fill="black"></polygon>
+											<polygon points="25,25 75,25 50,75" fill="white"></polygon>
+											<polygon points="50,25 75,75 25,75" fill="white"></polygon>
+											<polygon points="35,35 65,35 50,65" fill="white"></polygon>
+											<polygon points="35,35 65,35 50,65" fill="white"></polygon>
+											<polygon points="35,35 65,35 50,65" fill="white"></polygon>
+											<polygon points="35,35 65,35 50,65" fill="white"></polygon>
+										</mask>
+									</defs>
+								</svg>
+								<div className="box"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		)
+	}
+	if (error) {
+		return (
+			<section id='projects' className='py-20 bg-gradient-subtle relative overflow-hidden'>
+				<div className='container mx-auto px-4 relative z-10'>
+					<div className='text-center'>
+						<h2 className='text-4xl md:text-5xl lg:text-6xl font-bold mb-4 bg-gradient-primary bg-clip-text text-transparent'>
+							{'<Проекты/>'}
+						</h2>
+						<p className='text-lg text-red-500'>Ошибка: {error}</p>
+						<Button
+							onClick={() => window.location.reload()}
+							className='mt-4'
+						>
+							Попробовать снова
+						</Button>
+					</div>
+				</div>
+			</section>
+		)
+	}
 	return (
 		<section
 			id='projects'
@@ -227,19 +243,18 @@ const Projects = () => {
 						ref={projectsRef}
 						className='grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-8'
 					>
-						{filteredProjects.map((project, index) => (
+						{filteredProjects.map((project) => (
 							<ProjectCard
-								key={index}
+								key={project.id}
 								project={project}
-								index={index}
-								onClick={() => setSelectedProject(index)}
+								onClick={() => setSelectedProject(project)}
 							/>
 						))}
 					</div>
 
 					{selectedProject !== null && (
 						<ProjectModal
-							project={projects[selectedProject]}
+							project={selectedProject}
 							isOpen={selectedProject !== null}
 							onClose={() => setSelectedProject(null)}
 						/>
