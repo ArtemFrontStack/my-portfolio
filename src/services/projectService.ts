@@ -3,11 +3,12 @@ import {supabase} from '@/supabaseClient';
 import {Project} from '@/types/project';
 
 export class ProjectService {
-    static async getAllProjects(): Promise<Project[]> {
+    static async getAllProjects(limit: number = 12): Promise<Project[]> {
         const { data, error } = await supabase
             .from('projects')
             .select('*')
-            .order('created_at', { ascending: false });
+            .order('created_at', { ascending: false })
+            .limit(limit);
 
         if (error) {
             throw new Error(`Error fetching projects: ${error.message}`);

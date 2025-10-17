@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://artyom-portfolio-two.vercel.app/sitemap.xml

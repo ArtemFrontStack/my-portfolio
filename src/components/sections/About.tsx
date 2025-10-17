@@ -412,7 +412,7 @@ const About = () => {
 								</Link>
 								<Link
 									to='/projects'
-									className='flex items-center justify-center px-6 w-[250px] py-[15px] gap-2 bg-gradient-card border border-primary/30 hover:border-primary/50 font-semibold rounded-xl transition-all duration-500 bg-size-200 hover:scale-105 hover:shadow-lg text-white'
+									className='flex items-center justify-center px-6 w-[220px] py-[15px] gap-2 bg-gradient-card border border-primary/30 hover:border-primary/50 font-semibold rounded-xl transition-all duration-500 bg-size-200 hover:scale-105 hover:shadow-lg text-white'
 								>
 									<Rocket className='w-5 h-5 text-primary' />
 									 Мои проекты

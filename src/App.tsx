@@ -16,23 +16,28 @@ import SkillsPage from './pages/SkillsPage'
 
 const queryClient = new QueryClient()
 
-const validPaths = ['/', '/about', '/skills', '/projects', '/contact']
+const App = () => {
+	const location = useLocation();
+	const validPaths = ['/', '/about', '/skills', '/projects', '/contact'];
+	const isValidPath = validPaths.includes(location.pathname);
 
-const AppContent = () => {
-	const location = useLocation()
 	const [isLoading, setIsLoading] = useState(true)
 
 	useEffect(() => {
-		if (!validPaths.includes(location.pathname)) {
-			setIsLoading(false)
-			return
+		if (!isValidPath) {
+			setIsLoading(false);
+			return;
 		}
-		const timer = setTimeout(() => setIsLoading(false), 2000)
-		return () => clearTimeout(timer)
-	}, [location.pathname])
+		// Показываем loader только при первой загрузке
+		const timer = setTimeout(() => {
+			setIsLoading(false)
+		}, 2000)
 
-	if (!validPaths.includes(location.pathname)) {
-		return <NotFound />
+		return () => clearTimeout(timer)
+	}, [isValidPath])
+
+	if (!isValidPath) {
+		return <NotFound />;
 	}
 
 	if (isLoading) {
@@ -40,32 +45,27 @@ const AppContent = () => {
 	}
 
 	return (
-		<>
-			<ScrollToTopOnMount />
-			<Layout>
-				<Routes>
-					<Route path='/' element={<Index />} />
-					<Route path='/about' element={<AboutPage />} />
-					<Route path='/skills' element={<SkillsPage />} />
-					<Route path='/projects' element={<ProjectsPage />} />
-					<Route path='/contact' element={<ContactPage />} />
-					<Route path='*' element={<NotFound />} />
-				</Routes>
-			</Layout>
-		</>
+		<QueryClientProvider client={queryClient}>
+			<TooltipProvider>
+				<Toaster />
+				<Sonner />
+				<BrowserRouter>
+					<ScrollToTopOnMount />
+					<Layout>
+						<Routes>
+							<Route path='/' element={<Index />} />
+							<Route path='/about' element={<AboutPage />} />
+							<Route path='/skills' element={<SkillsPage />} />
+							<Route path='/projects' element={<ProjectsPage />} />
+							<Route path='/contact' element={<ContactPage />} />
+							{/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+							<Route path='*' element={<NotFound />} />
+						</Routes>
+					</Layout>
+				</BrowserRouter>
+			</TooltipProvider>
+		</QueryClientProvider>
 	)
 }
-
-const App = () => (
-	<QueryClientProvider client={queryClient}>
-		<TooltipProvider>
-			<Toaster />
-			<Sonner />
-			<BrowserRouter>
-				<AppContent />
-			</BrowserRouter>
-		</TooltipProvider>
-	</QueryClientProvider>
-)
 
 export default App

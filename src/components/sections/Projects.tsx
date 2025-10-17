@@ -1,28 +1,35 @@
 import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
-import {useScrollAnimation, useStaggerAnimation,} from '@/hooks/useGsapAnimation'
+import {useScrollAnimation, useStaggerAnimation} from '@/hooks/useGsapAnimation'
 import {useTilt} from '@/hooks/useTilt'
 import {Briefcase, Code2, ExternalLink, Github} from 'lucide-react'
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import ProjectModal from '../features/ProjectModal'
-import {ProjectService} from "@/services/projectService.ts";
-import {Project} from "@/types/project.ts";
-import {useQuery} from '@tanstack/react-query';
+import {ProjectService} from "@/services/projectService.ts"
+import {Project} from "@/types/project.ts"
+import {useQuery} from '@tanstack/react-query'
+import {useNavigate, useParams} from 'react-router-dom'
 
 // Типизация пропсов ProjectCard
 interface ProjectCardProps {
-  project: Project;
-  onClick: () => void;
+	project: Project;
+	onClick: () => void;
 }
 
 const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
 	const tiltRef = useTilt({ max: 10, scale: 1.02 })
 
-	// Генерация srcset для оптимизации изображений
-	const getSrcSet = (url: string) => {
-		if (!url) return undefined;
-		const webp = url.replace(/\.(png|jpg|jpeg)$/i, '.webp');
-		return `${webp} 1x, ${url} 2x`;
+	// Оптимизированная загрузка изображений
+	const getOptimizedImageUrl = (url: string, width = 800) => {
+		if (!url) return ''
+
+		// Для Supabase добавляем параметры оптимизации
+		if (url.includes('supabase')) {
+			return `${url}?width=${width}&quality=75&format=webp`
+		}
+
+		// Для других источников
+		return url
 	}
 
 	return (
@@ -37,15 +44,19 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
 			<div className='relative h-52 overflow-hidden bg-secondary/20'>
 				<img
 					style={{ maxWidth: '100%', maxHeight: '208px', objectFit: 'cover' }}
-					src={project.image_url}
+					src={getOptimizedImageUrl(project.image_url, 600)}
+					srcSet={`
+					  ${getOptimizedImageUrl(project.image_url, 400)} 400w,
+					  ${getOptimizedImageUrl(project.image_url, 600)} 600w,
+					  ${getOptimizedImageUrl(project.image_url, 900)} 900w
+					`}
+					sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
 					alt={project.title}
 					loading='lazy'
-					srcSet={getSrcSet(project.image_url)}
-					sizes='(max-width: 768px) 100vw, 33vw'
 					className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 rounded-xl bg-muted'
 					onError={e => {
 						const target = e.target as HTMLImageElement
-						target.src = `https://placehold.co/800x600/1e293b/64748b?text=${encodeURIComponent(
+						target.src = `https://placehold.co/600x400/1e293b/64748b?text=${encodeURIComponent(
 							project.title
 						)}`
 					}}
@@ -95,7 +106,7 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
 						className='flex-1 border-primary/30 hover:bg-primary/10 hover:border-primary/50 smooth-scale hover:scale-105'
 						onClick={e => {
 							e.stopPropagation()
-							window.open(project.github_url, '_blank')
+							window.open(project.github_url, '_blank', 'noopener,noreferrer')
 						}}
 					>
 						<Github className='w-4 h-4 mr-2' />
@@ -106,7 +117,7 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
 						className='flex-1 bg-gradient-primary hover:opacity-90 shadow-lg shadow-primary/20 smooth-scale hover:scale-105'
 						onClick={e => {
 							e.stopPropagation()
-							window.open(project.demo_url, '_blank')
+							window.open(project.demo_url, '_blank', 'noopener,noreferrer')
 						}}
 					>
 						<ExternalLink className='w-4 h-4 mr-2' />
@@ -118,74 +129,120 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
 	)
 }
 
+// Скелетон для загрузки
+const ProjectCardSkeleton = () => (
+	<div className='bg-card/50 rounded-2xl border border-border/50 overflow-hidden animate-pulse'>
+		<div className='h-52 bg-muted' />
+		<div className='p-6'>
+			<div className='h-6 bg-muted rounded mb-3' />
+			<div className='h-4 bg-muted rounded mb-2' />
+			<div className='h-4 bg-muted rounded w-3/4 mb-4' />
+			<div className='flex gap-2 mb-5'>
+				<div className='h-6 bg-muted rounded w-16' />
+				<div className='h-6 bg-muted rounded w-20' />
+				<div className='h-6 bg-muted rounded w-12' />
+			</div>
+			<div className='flex gap-3'>
+				<div className='h-10 bg-muted rounded flex-1' />
+				<div className='h-10 bg-muted rounded flex-1' />
+			</div>
+		</div>
+	</div>
+)
+
 const Projects = () => {
-	const [selectedProject, setSelectedProject] = useState<Project | null>(null)
-	const [filter, setFilter] = useState<string>('All')
+	const navigate = useNavigate();
+	const params = useParams();
+
+	const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+	// Открытие модалки и изменение URL
+	const handleOpenModal = (project: Project) => {
+		navigate(`/projects/${project.id}`, { replace: false, state: { modal: true } });
+		setSelectedProject(project);
+	};
+
+	// Закрытие модалки и возврат URL
+	const handleCloseModal = () => {
+		navigate('/projects', { replace: false });
+		setSelectedProject(null);
+	};
+
+	// Открытие модалки по прямому переходу на /projects/:id
 	const titleRef = useScrollAnimation('slideUp')
-	const filterRef = useScrollAnimation('fadeIn')
 	const projectsRef = useStaggerAnimation()
 
-	const { data: projects = [], isLoading: loading, error } = useQuery<Project[], Error>({
+	// Оптимизированный запрос с улучшенными настройками
+	const {
+		data: projects = [],
+		isLoading,
+		error,
+		isFetching
+	} = useQuery<Project[], Error>({
 		queryKey: ['projects'],
-		queryFn: ProjectService.getAllProjects,
-		staleTime: 1000 * 5, // 5 минут кэш
-	});
+		queryFn: async () => {
+			const data = await ProjectService.getAllProjects(12) // лимит 12
+			return data
+		},
+		staleTime: 10 * 60 * 1000, // 10 минут
+		gcTime: 30 * 60 * 1000, // 30 минут кэш
+		retry: 2,
+		retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 10000),
+		refetchOnWindowFocus: false,
+		refetchOnWindowFocus: false,
+		refetchOnMount: false
+	})
+
+	// Открытие модалки по прямому переходу на /projects/:id
+	useEffect(() => {
+		if (params.id && projects) {
+			const found = projects.find((p: Project) => String(p.id) === String(params.id));
+			if (found) {
+				setSelectedProject(found);
+				setNotFound(false);
+			} else {
+				setSelectedProject(null);
+				setNotFound(true);
+			}
+		} else {
+			setNotFound(false);
+		}
+	}, [params.id, projects]);
 
 	const allTags = ['All', ...Array.from(new Set(projects.flatMap(p => p.tags)))]
 	const filteredProjects =
 		filter === 'All' ? projects : projects.filter(p => p.tags.includes(filter))
 
-	if (loading) {
+	if (error) {
 		return (
-			<section id='projects' className='py-20 bg-gradient-subtle relative overflow-hidden'>
+			<section
+				id='projects'
+				className='py-20 bg-gradient-subtle relative overflow-hidden'
+			>
+				{/* Декоративные элементы фона */}
+				<div className='absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2' />
+				<div className='absolute bottom-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2' />
+
 				<div className='container mx-auto px-4 relative z-10'>
-					<div className='text-center'>
-						<h2 className='text-4xl md:text-5xl lg:text-6xl font-bold mb-4 bg-gradient-primary bg-clip-text text-transparent'>
-							{'<Проекты/>'}
-						</h2>
-						<div className="flex justify-center items-center mt-8">
-							<div className="loader w-[120px] h-[120px] flex flex-col items-center justify-center">
-								<svg width="100" height="100" viewBox="0 0 100 100">
-									<defs>
-										<mask id="clipping">
-											<polygon points="0,0 100,0 100,100 0,100" fill="black"></polygon>
-											<polygon points="25,25 75,25 50,75" fill="white"></polygon>
-											<polygon points="50,25 75,75 25,75" fill="white"></polygon>
-											<polygon points="35,35 65,35 50,65" fill="white"></polygon>
-											<polygon points="35,35 65,35 50,65" fill="white"></polygon>
-											<polygon points="35,35 65,35 50,65" fill="white"></polygon>
-											<polygon points="35,35 65,35 50,65" fill="white"></polygon>
-										</mask>
-									</defs>
-								</svg>
-								<div className="box"></div>
-							</div>
+					<div className='max-w-6xl mx-auto'>
+						<div className='text-center'>
+							<h2 className='text-4xl md:text-5xl lg:text-6xl font-bold mb-4 bg-gradient-primary bg-clip-text text-transparent'>
+								{'<Проекты/>'}
+							</h2>
+							<p className='text-lg text-red-500 mb-4'>Ошибка загрузки проектов</p>
+							<Button
+								onClick={() => window.location.reload()}
+								className='mt-4'
+							>
+								Попробовать снова
+							</Button>
 						</div>
 					</div>
 				</div>
 			</section>
 		)
 	}
-	if (error) {
-		return (
-			<section id='projects' className='py-20 bg-gradient-subtle relative overflow-hidden'>
-				<div className='container mx-auto px-4 relative z-10'>
-					<div className='text-center'>
-						<h2 className='text-4xl md:text-5xl lg:text-6xl font-bold mb-4 bg-gradient-primary bg-clip-text text-transparent'>
-							{'<Проекты/>'}
-						</h2>
-						<p className='text-lg text-red-500'>Ошибка: {error.message}</p>
-						<Button
-							onClick={() => window.location.reload()}
-							className='mt-4'
-						>
-							Попробовать снова
-						</Button>
-					</div>
-				</div>
-			</section>
-		)
-	}
+
 	return (
 		<section
 			id='projects'
@@ -214,44 +271,57 @@ const Projects = () => {
 						</div>
 					</div>
 
-					{/* Filter buttons */}
-					<div
-						ref={filterRef}
-						className='flex flex-wrap justify-center gap-2 mb-10'
-					>
-						{allTags.map(tag => (
-							<button
-								key={tag}
-								onClick={() => setFilter(tag)}
-								className={`px-4 py-2 rounded-full text-sm font-medium transition-all smooth-scale hover:scale-105 ${
-									filter === tag
-										? 'bg-primary text-primary-foreground shadow-lg shadow-primary/25'
-										: 'bg-secondary hover:bg-secondary/80 text-secondary-foreground'
-								}`}
-							>
-								{tag === 'All' ? 'Все' : tag}
-							</button>
-						))}
-					</div>
 
+
+
+					{/* Projects Grid */}
 					<div
 						ref={projectsRef}
 						className='grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-8'
 					>
-						{filteredProjects.map((project) => (
-							<ProjectCard
-								key={project.id}
-								project={project}
-								onClick={() => setSelectedProject(project)}
-							/>
-						))}
+						{(isLoading || isFetching) ? (
+							<div className="flex justify-center items-center mt-8 col-span-full">
+								<div className="loader w-[120px] h-[120px] flex flex-col items-center justify-center">
+									<svg width="100" height="100" viewBox="0 0 100 100">
+										<defs>
+											<mask id="clipping">
+												<polygon points="0,0 100,0 100,100 0,100" fill="black"></polygon>
+												<polygon points="25,25 75,25 50,75" fill="white"></polygon>
+												<polygon points="50,25 75,75 25,75" fill="white"></polygon>
+												<polygon points="35,35 65,35 50,65" fill="white"></polygon>
+												<polygon points="35,35 65,35 50,65" fill="white"></polygon>
+												<polygon points="35,35 65,35 50,65" fill="white"></polygon>
+												<polygon points="35,35 65,35 50,65" fill="white"></polygon>
+											</mask>
+										</defs>
+									</svg>
+									<div className="box"></div>
+								</div>
+							</div>
+						) : (
+							filteredProjects.map((project) => (
+								<ProjectCard
+									key={project.id}
+									project={project}
+									onClick={() => handleOpenModal(project)}
+								/>
+							))
+						)}
 					</div>
+
+					{filteredProjects.length === 0 && !isLoading && !isFetching && (
+						<div className='text-center py-12'>
+							<p className='text-muted-foreground text-lg'>
+								Проекты не найдены для выбранного фильтра
+							</p>
+						</div>
+					)}
 
 					{selectedProject !== null && (
 						<ProjectModal
 							project={selectedProject}
 							isOpen={selectedProject !== null}
-							onClose={() => setSelectedProject(null)}
+							onClose={handleCloseModal}
 						/>
 					)}
 				</div>
@@ -261,3 +331,4 @@ const Projects = () => {
 }
 
 export default Projects
+							isOpen
