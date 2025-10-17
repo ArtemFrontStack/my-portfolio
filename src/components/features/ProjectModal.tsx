@@ -13,8 +13,8 @@ interface ProjectModalProps {
 const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
 	return (
 		<Dialog open={isOpen} onOpenChange={onClose}>
-			<DialogContent className='w-[95vw] max-w-xl md:max-w-4xl max-h-[95vh] overflow-hidden bg-card border-border p-0 flex flex-col rounded-2xl'>
-				<div className='flex flex-col h-full max-h-[95vh]'>
+			<DialogContent className='w-[98vw] max-w-xl md:max-w-4xl max-h-[80vh] md:max-h-[95vh] overflow-hidden bg-card border-border p-0 flex flex-col rounded-2xl'>
+				<div className='flex flex-col h-full max-h-[80vh] md:max-h-[95vh]'>
 					<DialogHeader className='p-6 pb-4 shrink-0 relative'>
 						{/* Decorative gradient */}
 						<div className='absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl' />
@@ -35,7 +35,7 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
 					<div className='flex-1 overflow-y-auto px-6 grey-custom-scrollbar'>
 						<div className='space-y-6 md:space-y-8 pb-4'>
 							{/* Enhanced image with overlay */}
-							<div className='relative h-56 md:h-80 rounded-xl overflow-hidden group'>
+							<div className='relative h-40 md:h-56 lg:h-80 rounded-xl overflow-hidden group'>
 								<img
 									src={project.image_url}
 									alt={project.title}
@@ -103,33 +103,55 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
 					{/* Enhanced footer */}
 					<div className='p-6 pt-4 border-t border-border/50 shrink-0 mt-auto bg-secondary/20'>
 						<div className='flex flex-col sm:flex-row gap-3'>
-							<Button
-								className='flex-1 bg-gradient-primary hover:opacity-90 text-sm md:text-base shadow-lg shadow-primary/25 smooth-scale hover:scale-105'
-								asChild
-							>
-								<a
-									href={project.demo_url}
-									target='_blank'
-									rel='noopener noreferrer'
-								>
-									<ExternalLink className='w-4 h-4 mr-2' />
-									Посмотреть демо
-								</a>
-							</Button>
-							<Button
-								variant='outline'
-								className='flex-1 border-primary/30 hover:bg-primary/10 hover:border-primary/50 text-sm md:text-base smooth-scale hover:scale-105'
-								asChild
-							>
-								<a
-									href={project.github_url}
-									target='_blank'
-									rel='noopener noreferrer'
-								>
-									<Github className='w-4 h-4 mr-2' />
-									Исходный код
-								</a>
-							</Button>
+							{project.demo_url ? (
+								<>
+									<Button
+										className='flex-1 bg-gradient-primary hover:opacity-90 text-sm md:text-base shadow-lg shadow-primary/25 smooth-scale hover:scale-105'
+										asChild
+									>
+										<a
+											href={project.demo_url}
+											target='_blank'
+											rel='noopener noreferrer'
+										>
+											<ExternalLink className='w-4 h-4 mr-2' />
+											Посмотреть демо
+										</a>
+									</Button>
+									<Button
+										variant='outline'
+										className='flex-1 border-primary/30 hover:bg-primary/10 hover:border-primary/50 text-sm md:text-base smooth-scale hover:scale-105'
+										asChild
+									>
+										<a
+											href={project.github_url}
+											target='_blank'
+											rel='noopener noreferrer'
+										>
+											<Github className='w-4 h-4 mr-2' />
+											Исходный код
+										</a>
+									</Button>
+
+								</>
+								): (
+
+									<Button
+										variant='outline'
+										className='flex-1 border-primary/30 hover:bg-primary/10 hover:border-primary/50 text-sm md:text-base smooth-scale hover:scale-105'
+										asChild
+									>
+										<a
+											href={project.github_url}
+											target='_blank'
+											rel='noopener noreferrer'
+										>
+											<Github className='w-4 h-4 mr-2' />
+											Исходный код
+										</a>
+									</Button>
+								)}
+
 						</div>
 					</div>
 				</div>
