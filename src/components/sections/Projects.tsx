@@ -3,11 +3,11 @@ import {Button} from '@/components/ui/button'
 import {useScrollAnimation, useStaggerAnimation,} from '@/hooks/useGsapAnimation'
 import {useTilt} from '@/hooks/useTilt'
 import {Briefcase, Code2, ExternalLink, Github} from 'lucide-react'
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import ProjectModal from '../features/ProjectModal'
 import {ProjectService} from "@/services/projectService.ts";
 import {Project} from "@/types/project.ts";
-
+import {useQuery} from '@tanstack/react-query';
 
 // Типизация пропсов ProjectCard
 interface ProjectCardProps {
@@ -115,26 +115,11 @@ const Projects = () => {
 	const filterRef = useScrollAnimation('fadeIn')
 	const projectsRef = useStaggerAnimation()
 
-	const [projects, setProjects] = useState<Project[]>([])
-	const [loading, setLoading] = useState<boolean>(true)
-	const [error, setError] = useState<string | null>(null)
-
-	useEffect(() => {
-		const loadProjects = async () => {
-			try {
-				setLoading(true)
-				const projectsData = await ProjectService.getAllProjects()
-				setProjects(projectsData)
-			} catch (err) {
-				setError(err instanceof Error ? err.message : 'Ошибка загрузки проектов')
-				console.error('Error loading projects:', err)
-			} finally {
-				setLoading(false)
-			}
-		}
-
-		loadProjects()
-	}, [])
+	const { data: projects = [], isLoading: loading, error } = useQuery<Project[], Error>({
+		queryKey: ['projects'],
+		queryFn: ProjectService.getAllProjects,
+		staleTime: 1000 * 5, // 5 минут кэш
+	});
 
 	const allTags = ['All', ...Array.from(new Set(projects.flatMap(p => p.tags)))]
 	const filteredProjects =
@@ -179,7 +164,7 @@ const Projects = () => {
 						<h2 className='text-4xl md:text-5xl lg:text-6xl font-bold mb-4 bg-gradient-primary bg-clip-text text-transparent'>
 							{'<Проекты/>'}
 						</h2>
-						<p className='text-lg text-red-500'>Ошибка: {error}</p>
+						<p className='text-lg text-red-500'>Ошибка: {error.message}</p>
 						<Button
 							onClick={() => window.location.reload()}
 							className='mt-4'
