@@ -1,9 +1,8 @@
 import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
 import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle,} from '@/components/ui/dialog'
-import {CheckCircle2, ExternalLink, Github, Sparkles, X} from 'lucide-react'
+import {CheckCircle2, ExternalLink, Github, Sparkles} from 'lucide-react'
 import {Project} from "@/types/project.ts";
-import {useEffect} from 'react';
 
 interface ProjectModalProps {
 	project: Project
@@ -12,40 +11,17 @@ interface ProjectModalProps {
 }
 
 const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
-	// Блокировка скролла на body при открытии модалки
-	useEffect(() => {
-		if (isOpen) {
-			document.body.style.overflow = 'hidden';
-			document.body.style.touchAction = 'none';
-		} else {
-			document.body.style.overflow = '';
-			document.body.style.touchAction = '';
-		}
-
-		return () => {
-			document.body.style.overflow = '';
-			document.body.style.touchAction = '';
-		};
-	}, [isOpen]);
-
 	return (
 		<Dialog open={isOpen} onOpenChange={onClose}>
-			<DialogContent className='w-[95vw] max-w-xl md:max-w-4xl h-[95dvh] md:max-h-[95vh] overflow-hidden bg-card border-border p-0 flex flex-col rounded-2xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
-				{/* Кнопка закрытия в правом верхнем углу */}
-				<button
-					onClick={onClose}
-					className='absolute top-4 right-4 z-50 w-8 h-8 rounded-full bg-background/80 backdrop-blur-sm border border-border flex items-center justify-center hover:bg-accent transition-colors smooth-scale hover:scale-110'
-					aria-label="Закрыть"
-				>
-					<X className='w-4 h-4' />
-				</button>
-
-				<div className='flex flex-col h-full'>
+			<DialogContent className='w-[95vw] max-w-xl md:max-w-4xl max-h-[95vh] overflow-hidden bg-card border-border p-0 flex flex-col rounded-2xl'>
+				<div className='flex flex-col h-full max-h-[95vh]'>
 					<DialogHeader className='p-6 pb-4 shrink-0 relative'>
 						{/* Decorative gradient */}
 						<div className='absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl' />
 
-						<div className='relative pr-8'> {/* Добавляем отступ для кнопки закрытия */}
+						<div className='relative'>
+
+
 							<DialogTitle className='text-2xl md:text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2'>
 								{project.title}
 							</DialogTitle>
@@ -59,7 +35,7 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
 					<div className='flex-1 overflow-y-auto px-6 grey-custom-scrollbar'>
 						<div className='space-y-6 md:space-y-8 pb-4'>
 							{/* Enhanced image with overlay */}
-							<div className='relative h-48 md:h-80 rounded-xl overflow-hidden group'>
+							<div className='relative h-56 md:h-80 rounded-xl overflow-hidden group'>
 								<img
 									src={project.image_url}
 									alt={project.title}
@@ -125,26 +101,24 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
 					</div>
 
 					{/* Enhanced footer */}
-					<div className='p-6 pt-4 border-t border-border/50 shrink-0 bg-secondary/20'>
+					<div className='p-6 pt-4 border-t border-border/50 shrink-0 mt-auto bg-secondary/20'>
 						<div className='flex flex-col sm:flex-row gap-3'>
-							{project.demo_url && (
-								<Button
-									className='flex-1 bg-gradient-primary hover:opacity-90 text-sm md:text-base shadow-lg shadow-primary/25 smooth-scale hover:scale-105'
-									asChild
+							<Button
+								className='flex-1 bg-gradient-primary hover:opacity-90 text-sm md:text-base shadow-lg shadow-primary/25 smooth-scale hover:scale-105'
+								asChild
+							>
+								<a
+									href={project.demo_url}
+									target='_blank'
+									rel='noopener noreferrer'
 								>
-									<a
-										href={project.demo_url}
-										target='_blank'
-										rel='noopener noreferrer'
-									>
-										<ExternalLink className='w-4 h-4 mr-2' />
-										Посмотреть демо
-									</a>
-								</Button>
-							)}
+									<ExternalLink className='w-4 h-4 mr-2' />
+									Посмотреть демо
+								</a>
+							</Button>
 							<Button
 								variant='outline'
-								className={`flex-1 border-primary/30 hover:bg-primary/10 hover:border-primary/50 text-sm md:text-base smooth-scale hover:scale-105 ${!project.demo_url ? 'sm:col-span-2' : ''}`}
+								className='flex-1 border-primary/30 hover:bg-primary/10 hover:border-primary/50 text-sm md:text-base smooth-scale hover:scale-105'
 								asChild
 							>
 								<a
