@@ -18,6 +18,13 @@ interface ProjectCardProps {
 const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
 	const tiltRef = useTilt({ max: 10, scale: 1.02 })
 
+	// Генерация srcset для оптимизации изображений
+	const getSrcSet = (url: string) => {
+		if (!url) return undefined;
+		const webp = url.replace(/\.(png|jpg|jpeg)$/i, '.webp');
+		return `${webp} 1x, ${url} 2x`;
+	}
+
 	return (
 		<div
 			ref={tiltRef}
@@ -29,10 +36,13 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
 		>
 			<div className='relative h-52 overflow-hidden bg-secondary/20'>
 				<img
+					style={{ maxWidth: '100%', maxHeight: '208px', objectFit: 'cover' }}
 					src={project.image_url}
 					alt={project.title}
-					className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-700'
 					loading='lazy'
+					srcSet={getSrcSet(project.image_url)}
+					sizes='(max-width: 768px) 100vw, 33vw'
+					className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 rounded-xl bg-muted'
 					onError={e => {
 						const target = e.target as HTMLImageElement
 						target.src = `https://placehold.co/800x600/1e293b/64748b?text=${encodeURIComponent(
