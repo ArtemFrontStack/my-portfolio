@@ -35,6 +35,8 @@ const ContactForm = () => {
 		vk: false,
 	})
 	const [isSubmitting, setIsSubmitting] = useState(false)
+	const [consent, setConsent] = useState(false)
+	const [consentError, setConsentError] = useState('')
 
 	const validateEmail = (email: string) => {
 		const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
@@ -283,10 +285,15 @@ const ContactForm = () => {
 			telegram: true,
 			vk: true,
 		})
-
-		if (!validateForm()) {
+		const isValid = validateForm()
+		if (!consent) {
+			setConsentError('Необходимо согласие с политикой конфиденциальности')
+		} else {
+			setConsentError('')
+		}
+		if (!isValid || !consent) {
 			toast.error('Пожалуйста, исправьте ошибки в форме', {
-				description: 'Проверьте правильность заполнения всех полей',
+				description: 'Проверьте правильность заполнения всех полей и согласие с политикой',
 			})
 			return
 		}
@@ -299,12 +306,12 @@ const ContactForm = () => {
 				EMAILJS_CONFIG.SERVICE_ID,
 				EMAILJS_CONFIG.TEMPLATE_ID,
 				{
-					  from_name: formData.name,
- 			 from_email: formData.email,
-  phone: formData.phone,
-  telegram: formData.telegram || '',
-  vk: formData.vk || '',
-  project: formData.project
+					from_name: formData.name,
+					from_email: formData.email,
+					phone: formData.phone,
+					telegram: formData.telegram || '',
+					vk: formData.vk || '',
+					project: formData.project
 				},
 				EMAILJS_CONFIG.PUBLIC_KEY
 			)
@@ -332,6 +339,7 @@ const ContactForm = () => {
 				vk: false,
 			})
 			setErrors({})
+			setConsent(false) // очищаем чекбокс после отправки
 		} catch (error) {
 			console.error('Ошибка отправки:', error)
 			toast.error('Не удалось отправить сообщение', {
@@ -340,6 +348,11 @@ const ContactForm = () => {
 		} finally {
 			setIsSubmitting(false)
 		}
+	}
+
+	const handleConsentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setConsent(e.target.checked)
+		if (e.target.checked) setConsentError('')
 	}
 
 	return (
@@ -368,8 +381,8 @@ const ContactForm = () => {
 								errors.name && touched.name
 									? 'border-red-500/70 focus:ring-red-500/60 focus:border-red-500'
 									: formData.name && !errors.name && touched.name
-									? 'border-green-500/70 focus:ring-green-500/60 focus:border-green-500'
-									: 'border-primary/20 hover:border-primary/40'
+										? 'border-green-500/70 focus:ring-green-500/60 focus:border-green-500'
+										: 'border-primary/20 hover:border-primary/40'
 							}`}
 						/>
 						{errors.name && touched.name ? (
@@ -412,8 +425,8 @@ const ContactForm = () => {
 								errors.email && touched.email
 									? 'border-red-500/70 focus:ring-red-500/60 focus:border-red-500'
 									: formData.email && !errors.email && touched.email
-									? 'border-green-500/70 focus:ring-green-500/60 focus:border-green-500'
-									: 'border-primary/20 hover:border-primary/40'
+										? 'border-green-500/70 focus:ring-green-500/60 focus:border-green-500'
+										: 'border-primary/20 hover:border-primary/40'
 							}`}
 						/>
 						{errors.email && touched.email ? (
@@ -455,8 +468,8 @@ const ContactForm = () => {
 								errors.phone && touched.phone
 									? 'border-red-500/70 focus:ring-red-500/60 focus:border-red-500'
 									: formData.phone && !errors.phone && touched.phone
-									? 'border-green-500/70 focus:ring-green-500/60 focus:border-green-500'
-									: 'border-primary/20 hover:border-primary/40'
+										? 'border-green-500/70 focus:ring-green-500/60 focus:border-green-500'
+										: 'border-primary/20 hover:border-primary/40'
 							}`}
 						/>
 						{errors.phone && touched.phone ? (
@@ -499,8 +512,8 @@ const ContactForm = () => {
 								errors.telegram && touched.telegram
 									? 'border-red-500/70 focus:ring-red-500/60 focus:border-red-500'
 									: formData.telegram && !errors.telegram && touched.telegram
-									? 'border-green-500/70 focus:ring-green-500/60 focus:border-green-500'
-									: 'border-primary/20 hover:border-primary/40'
+										? 'border-green-500/70 focus:ring-green-500/60 focus:border-green-500'
+										: 'border-primary/20 hover:border-primary/40'
 							}`}
 						/>
 						{errors.telegram && touched.telegram ? (
@@ -542,8 +555,8 @@ const ContactForm = () => {
 								errors.vk && touched.vk
 									? 'border-red-500/70 focus:ring-red-500/60 focus:border-red-500'
 									: formData.vk && !errors.vk && touched.vk
-									? 'border-green-500/70 focus:ring-green-500/60 focus:border-green-500'
-									: 'border-primary/20 hover:border-primary/40'
+										? 'border-green-500/70 focus:ring-green-500/60 focus:border-green-500'
+										: 'border-primary/20 hover:border-primary/40'
 							}`}
 						/>
 						{errors.vk && touched.vk ? (
@@ -586,8 +599,8 @@ const ContactForm = () => {
 								errors.project && touched.project
 									? 'border-red-500/70 focus:ring-red-500/60 focus:border-red-500'
 									: formData.project && !errors.project && touched.project
-									? 'border-green-500/70 focus:ring-green-500/60 focus:border-green-500'
-									: 'border-primary/20 hover:border-primary/40'
+										? 'border-green-500/70 focus:ring-green-500/60 focus:border-green-500'
+										: 'border-primary/20 hover:border-primary/40'
 							}`}
 						/>
 						{errors.project && touched.project ? (
@@ -626,28 +639,80 @@ const ContactForm = () => {
 					</p>
 				</div>
 			</div>
+			<div className='flex flex-col w-full gap-4'>
+				{/* Consent Checkbox */}
+				<div className='flex items-start mt-2 mb-2 '>
+					<label htmlFor='consent' className='flex items-center cursor-pointer select-none'>
+					<span className='relative flex items-center'>
+						<input
+							type='checkbox'
+							id='consent'
+							checked={consent}
+							onChange={handleConsentChange}
+							className='peer appearance-none w-5 h-5 border-2 border-primary/40 rounded-md bg-background transition-all duration-300 mr-2 checked:bg-gradient-to-br checked:from-primary checked:via-accent checked:to-primary checked:border-primary focus:outline-none focus:ring-0 focus:border-primary/40'
+						/>
+						<span className='pointer-events-none absolute left-0 top-0 w-5 h-5 flex items-center justify-center'>
+							<svg
+								className='opacity-0 peer-checked:opacity-100 transition-opacity duration-200 text-white'
+								width='18'
+								height='18'
+								viewBox='0 0 18 18'
+								fill='none'
+								xmlns='http://www.w3.org/2000/svg'
+							>
+								<path
+									d='M4 9.5L8 13L14 6'
+									stroke='currentColor'
+									strokeWidth='2.2'
+									strokeLinecap='round'
+									strokeLinejoin='round'
+								/>
+							</svg>
+						</span>
+					</span>
+						<span className='text-xs sm:text-sm text-muted-foreground'>
+						Я даю согласие на обработку персональных данных и принимаю условия{' '}
+							<a
+								href='/privacy.html'
+								target='_blank'
+								className='underline text-primary hover:text-accent'
+							>
+							политики конфиденциальности
+						</a>{' '}
+							<span className='text-destructive'>*</span>
+					</span>
+					</label>
+				</div>
+				{consentError && (
+					<p className='text-xs text-red-500 flex items-center gap-1 animate-fade-in mb-2'>
+						<AlertCircle className='w-3 h-3' />
+						{consentError}
+					</p>
+				)}
 
-			{/* Submit Button */}
-			<Button
-				type='submit'
-				size='lg'
-				disabled={isSubmitting}
-				className='w-full bg-gradient-to-r from-primary via-accent to-primary bg-size-200 hover:bg-pos-100 hover:shadow-lg hover:shadow-primary/30 transition-all duration-500 h-11 sm:h-12 text-sm sm:text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed'
-			>
-				{isSubmitting ? (
-					<>
+				{/* Submit Button */}
+				<Button
+					type='submit'
+					size='lg'
+					disabled={isSubmitting}
+					className='w-full bg-gradient-to-r from-primary via-accent to-primary bg-size-200 hover:bg-pos-100 hover:shadow-lg hover:shadow-primary/30 transition-all duration-500 h-11 sm:h-12 text-sm sm:text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed'
+				>
+					{isSubmitting ? (
+						<>
 						<span className='inline-flex items-center gap-2'>
 							<span className='w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin' />
 							Отправка...
 						</span>
-					</>
-				) : (
-					<>
-						<Send className='w-4 h-4 sm:w-5 sm:h-5 mr-2' />
-						Отправить заявку
-					</>
-				)}
-			</Button>
+						</>
+					) : (
+						<>
+							<Send className='w-4 h-4 sm:w-5 sm:h-5 mr-2' />
+							Отправить заявку
+						</>
+					)}
+				</Button>
+			</div>
+
 		</form>
 	)
 }

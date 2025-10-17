@@ -46,7 +46,7 @@ const Footer = () => {
 						{/* Лого/Имя */}
 						<div className='text-center md:text-left'>
 							<Link to='/' className='group'>
-								<h3 className='text-xl font-bold bg-gradient-primary bg-clip-text text-transparent hover:opacity-80 transition-opacity'>
+								<h3 className='text-xl font-bold bg-gradient-primary bg-clip-text text-transparent hover:opacity-80 transition-opacity '>
 									{'<Артём Dev />'}
 								</h3>
 								<p className='text-xs text-muted-foreground mt-1'>
@@ -100,11 +100,19 @@ const Footer = () => {
 					{/* Нижняя часть */}
 					<div className='border-t border-primary/20 pt-6'>
 						<div className='flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-muted-foreground'>
-							<p>© 2025 Артём. Все права защищены</p>
+							<p>© 2025 Артём dev. Все права защищены</p>
 							<p className='flex items-center gap-1'>
 								Сделано с <span className='text-primary'>❤</span> на React +
 								TypeScript
 							</p>
+							<a
+								href='/privacy.html'
+								target='_blank'
+								rel='noopener noreferrer'
+								className='underline text-primary hover:text-accent transition-colors'
+							>
+								Политика конфиденциальности
+							</a>
 						</div>
 					</div>
 				</div>

@@ -1,6 +1,6 @@
-import { useScrollAnimation } from '@/hooks/useGsapAnimation'
-import { Github, Mail, MapPin, MessageCircle, Phone } from 'lucide-react'
-import ContactForm from '../features/ContactForm'
+import {useScrollAnimation} from '@/hooks/useGsapAnimation'
+import {Github, Mail, MapPin, MessageCircle, Phone} from 'lucide-react'
+import ContactForm from "@/components/features/ContactForm.tsx";
 
 const Contact = () => {
 	const titleRef = useScrollAnimation('slideUp')
@@ -154,9 +154,13 @@ const Contact = () => {
 									Доступен для работы
 								</h4>
 								<p className='text-sm sm:text-base text-foreground/80 leading-relaxed'>
-									Ищу возможности для роста в дружной команде. Готов к релокации
-									и новым вызовам. Свяжитесь со мной, чтобы обсудить возможное
-									сотрудничество!
+									Ищу возможности для роста в дружной команде. Готов к релокации и новым вызовам. Свяжитесь со мной, чтобы обсудить возможное сотрудничество!
+									<br></br>
+									<br></br>
+									Буду рад ответить на ваши вопросы и обсудить, как могу быть полезен вашему проекту.
+
+
+
 								</p>
 							</div>
 						</div>

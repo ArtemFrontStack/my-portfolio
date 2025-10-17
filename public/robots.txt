@@ -1,9 +1,20 @@
-User-agent: *
-Allow: /
-Sitemap: https://artoym-portfolio.vercel.app/sitemap.xml
+User-agent: Googlebot
+Disallow: /
 
+User-agent: Googlebot-Image
+Disallow: /
+
+User-agent: Googlebot-News
+Disallow: /
+
+User-agent: Googlebot-Video
+Disallow: /
 
 User-agent: Yandex
 Allow: /
 Crawl-delay: 1
-Host: https://artoym-portfolio.vercel.app
+
+User-agent: *
+Allow: /
+
+Sitemap: https://artoym-portfolio.vercel.app/sitemap.xml

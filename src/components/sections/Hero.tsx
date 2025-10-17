@@ -147,7 +147,7 @@ const Hero = () => {
 							<MessageCircle className='w-5 h-5 sm:w-6 sm:h-6 group-hover:text-primary transition-colors' />
 						</a>
 						<a
-							href='https://vk.com/id522748848'
+							href='mailto:artem2006pax@mail.ru'
 							className='smooth-scale group p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-card/80 to-card/50 backdrop-blur-sm border-2 border-border hover:border-primary/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/20'
 							aria-label='Email'
 						>

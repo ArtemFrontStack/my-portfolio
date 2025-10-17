@@ -1,7 +1,7 @@
-import { Button } from '@/components/ui/button'
-import { Menu, X, Home, User, Code, Briefcase, Mail } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import {Button} from '@/components/ui/button'
+import {Briefcase, Code, Home, Mail, Menu, User, X} from 'lucide-react'
+import {useEffect, useState} from 'react'
+import {Link, useLocation} from 'react-router-dom'
 
 const Navigation = () => {
 	const [isScrolled, setIsScrolled] = useState(false)
@@ -42,12 +42,16 @@ const Navigation = () => {
 		{ label: 'Контакты', path: '/contact', icon: Mail },
 	]
 
+	const isHeroPage = location.pathname === '/'
+
 	return (
 		<nav
 			className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${
-				isScrolled || isMobileMenuOpen
-					? 'bg-background/98 backdrop-blur-xl shadow-lg '
-					: 'bg-gradient-to-b from-background/80 via-background/40 to-transparent backdrop-blur-sm'
+				isHeroPage
+					? 'bg-gradient-to-b from-background/80 via-background/40 to-transparent backdrop-blur-sm'
+					: (isScrolled || isMobileMenuOpen
+						? 'bg-background/98 backdrop-blur-xl shadow-lg'
+						: 'bg-gradient-to-b from-background/80 via-background/40 to-transparent backdrop-blur-sm')
 			}`}
 		>
 			<div className='container mx-auto px-3 sm:px-4'>
