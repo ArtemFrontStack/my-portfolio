@@ -92,7 +92,15 @@ const Stats = () => {
   );
 };
 
-const StatCounter = ({ icon: Icon, end, suffix, label, color, isVisible, delay }: any) => {
+const StatCounter = ({ icon: Icon, end, suffix, label, color, isVisible, delay }: {
+  icon: React.ComponentType<{ className?: string }>;
+  end: number;
+  suffix: string;
+  label: string;
+  color: string;
+  isVisible: boolean;
+  delay: number;
+}) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {

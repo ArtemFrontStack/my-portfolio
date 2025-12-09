@@ -46,7 +46,7 @@ const Footer = () => {
 						{/* Лого/Имя */}
 						<div className='text-center md:text-left'>
 							<Link to='/' className='group'>
-								<h3 className='text-xl font-bold bg-gradient-primary bg-clip-text text-transparent hover:opacity-80 transition-opacity '>
+								<h3 className='text-xl font-bold bg-gradient-primary bg-clip-text text-transparent hover:opacity-80 transition-opacity whitespace-nowrap'>
 									{'<Артём Dev />'}
 								</h3>
 								<p className='text-xs text-muted-foreground mt-1'>

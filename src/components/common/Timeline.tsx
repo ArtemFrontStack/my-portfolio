@@ -68,7 +68,19 @@ const Timeline = () => {
 	)
 }
 
-const TimelineItem = ({ item, index }: any) => {
+const TimelineItem = ({ item, index }: {
+  item: {
+    type: string;
+    icon: React.ComponentType<{ className?: string }>;
+    title: string;
+    organization: string;
+    period: string;
+    description: string;
+    color: string;
+    bgColor: string;
+  };
+  index: number;
+}) => {
 	const Icon = item.icon
 	const isEven = index % 2 === 0
 	const itemRef = useScrollAnimation(isEven ? 'slideRight' : 'slideLeft')
