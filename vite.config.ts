@@ -10,8 +10,8 @@ export default defineConfig(({mode}) => ({
         port: 8080,
     },
     build: {
+        outDir: 'dist',
         chunkSizeWarningLimit: 1000 ,
-        outDir: "docs"
     },
     plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
     resolve: {

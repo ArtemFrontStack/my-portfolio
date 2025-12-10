@@ -19,8 +19,8 @@ const Contact = () => {
 		{
 			icon: MessageCircle,
 			label: 'Telegram',
-			value: '@artoym-front',
-			href: 't.me/artoym_front',
+			value: '@artoym_dev',
+			href: 'https://t.me/artoym_dev',
 			color: 'from-cyan-500 to-blue-400',
 		},
 		{
