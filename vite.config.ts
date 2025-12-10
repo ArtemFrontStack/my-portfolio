@@ -10,7 +10,8 @@ export default defineConfig(({mode}) => ({
         port: 8080,
     },
     build: {
-        chunkSizeWarningLimit: 1000 // например, 1000 КБ
+        chunkSizeWarningLimit: 1000 ,
+        outDir: "docs"
     },
     plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
     resolve: {
