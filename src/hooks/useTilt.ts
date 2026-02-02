@@ -24,8 +24,11 @@ export const useTilt = (options: TiltOptions = {}) => {
 		if (!element) return
 
 		let rafId: number
+		let isAnimating = false
 
 		const handleMouseMove = (e: MouseEvent) => {
+			if (isAnimating) return
+			isAnimating = true
 			const rect = element.getBoundingClientRect()
 			const x = e.clientX - rect.left
 			const y = e.clientY - rect.top
@@ -45,6 +48,7 @@ export const useTilt = (options: TiltOptions = {}) => {
           rotateY(${tiltY}deg)
           scale3d(${scale}, ${scale}, ${scale})
         `
+				isAnimating = false
 			})
 		}
 

@@ -99,13 +99,22 @@ html::-webkit-scrollbar-track {
 		@apply border-border;
 	}
 
-	/* Исправление дергания при hover с scale */
+	/* Оптимизация производительности анимаций */
 	[class*='hover:scale'],
-	[class*='group-hover:scale'] {
+	[class*='group-hover:scale'],
+	[class*='animate-'],
+	[class*='transition-'] {
 		will-change: transform;
 		transform: translateZ(0);
 		backface-visibility: hidden;
 		-webkit-font-smoothing: subpixel-antialiased;
+	}
+
+	/* Оптимизация blur эффектов */
+	[class*='blur-'],
+	[class*='backdrop-blur-'] {
+		will-change: filter;
+		transform: translateZ(0);
 	}
 
 	body {
@@ -126,7 +135,7 @@ html::-webkit-scrollbar-track {
 @keyframes float {
 	0%,
 	100% {
-		transform: translateY(0px);
+		transform: translateY(0);
 	}
 	50% {
 		transform: translateY(-20px);

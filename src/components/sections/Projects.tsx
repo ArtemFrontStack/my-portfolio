@@ -4,8 +4,9 @@ import {Input} from '@/components/ui/input'
 import {MultiSelect} from '@/components/ui/multi-select'
 import {useScrollAnimation, useStaggerAnimation} from '@/hooks/useGsapAnimation'
 import {useTilt} from '@/hooks/useTilt'
+import {useDebounce} from '@/hooks/useDebounce'
 import {Briefcase, Code2, ExternalLink, Github, Search, X} from 'lucide-react'
-import {useState} from 'react'
+import {useState, useMemo, useCallback, memo} from 'react'
 import ProjectModal from '../features/ProjectModal'
 import {ProjectService} from "@/services/projectService"
 import {Project} from "@/types/project"
@@ -17,11 +18,11 @@ interface ProjectCardProps {
 	onClick: () => void;
 }
 
-const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
+const ProjectCard = memo(({ project, onClick }: ProjectCardProps) => {
 	const tiltRef = useTilt({ max: 10, scale: 1.02 })
 
 	// Оптимизированная загрузка изображений
-	const getOptimizedImageUrl = (url: string, width = 800) => {
+	const getOptimizedImageUrl = useCallback((url: string, width = 800) => {
 		if (!url) return ''
 
 		// Для Supabase добавляем параметры оптимизации
@@ -30,8 +31,8 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
 		}
 
 		// Для других источников
-		return url
-	}
+		 return url
+	}, [])
 
 	return (
 		<div
@@ -142,33 +143,15 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
 			</div>
 		</div>
 	)
-}
+})
 
-// Скелетон для загрузки
-const ProjectCardSkeleton = () => (
-	<div className='bg-card/50 rounded-2xl border border-border/50 overflow-hidden animate-pulse'>
-		<div className='h-52 bg-muted' />
-		<div className='p-6'>
-			<div className='h-6 bg-muted rounded mb-3' />
-			<div className='h-4 bg-muted rounded mb-2' />
-			<div className='h-4 bg-muted rounded w-3/4 mb-4' />
-			<div className='flex gap-2 mb-5'>
-				<div className='h-6 bg-muted rounded w-16' />
-				<div className='h-6 bg-muted rounded w-20' />
-				<div className='h-6 bg-muted rounded w-12' />
-			</div>
-			<div className='flex gap-3'>
-				<div className='h-10 bg-muted rounded flex-1' />
-				<div className='h-10 bg-muted rounded flex-1' />
-			</div>
-		</div>
-	</div>
-)
+ProjectCard.displayName = 'ProjectCard'
 
 const Projects = () => {
 	const [selectedProject, setSelectedProject] = useState<Project | null>(null)
 	const [selectedTags, setSelectedTags] = useState<string[]>([])
 	const [searchQuery, setSearchQuery] = useState<string>('')
+	const debouncedSearchQuery = useDebounce(searchQuery, 300)
 	const titleRef = useScrollAnimation('slideUp')
 	const filterRef = useScrollAnimation('fadeIn')
 	const projectsRef = useStaggerAnimation()
@@ -193,17 +176,31 @@ const Projects = () => {
 		refetchOnMount: false
 	})
 
-	const allTags = Array.from(new Set(projects.flatMap(p => p.tags)))
+	const allTags = useMemo(() => 
+		Array.from(new Set(projects.flatMap(p => p.tags))),
+		[projects]
+	)
 	
-	const filteredProjects = projects.filter(project => {
-		const matchesFilter = selectedTags.length === 0 || selectedTags.some(tag => project.tags.includes(tag))
-		const matchesSearch = 
-			project.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-			project.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-			project.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+	const filteredProjects = useMemo(() => 
+		projects.filter(project => {
+			const matchesFilter = selectedTags.length === 0 || selectedTags.some(tag => project.tags.includes(tag))
+			const matchesSearch = 
+			project.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) || 
+			project.description.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+			project.tags.some(tag => tag.toLowerCase().includes(debouncedSearchQuery.toLowerCase()))
 		
-		return matchesFilter && matchesSearch
-	})
+			return matchesFilter && matchesSearch
+		}),
+		[projects, selectedTags, debouncedSearchQuery]
+	)
+
+	const handleProjectClick = useCallback((project: Project) => {
+		setSelectedProject(project)
+	}, [])
+
+	const handleCloseModal = useCallback(() => {
+		setSelectedProject(null)
+	}, [])
 
 	if (error) {
 		return (
@@ -319,7 +316,7 @@ const Projects = () => {
 								<ProjectCard
 									key={project.id}
 									project={project}
-									onClick={() => setSelectedProject(project)}
+								onClick={() => handleProjectClick(project)}
 								/>
 							))
 						)}

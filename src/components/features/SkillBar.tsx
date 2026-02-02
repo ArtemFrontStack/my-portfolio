@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, memo } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 interface SkillBarProps {
@@ -7,7 +7,7 @@ interface SkillBarProps {
   delay?: number;
 }
 
-const SkillBar = ({ skill, percentage, delay = 0 }: SkillBarProps) => {
+const SkillBar = memo(({ skill, percentage, delay = 0 }: SkillBarProps) => {
   const [width, setWidth] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const isVisible = useScrollAnimation(ref);
@@ -35,6 +35,8 @@ const SkillBar = ({ skill, percentage, delay = 0 }: SkillBarProps) => {
       </div>
     </div>
   );
-};
+});
+
+SkillBar.displayName = 'SkillBar';
 
 export default SkillBar;

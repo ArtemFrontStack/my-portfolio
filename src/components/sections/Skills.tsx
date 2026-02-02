@@ -4,14 +4,15 @@ import {
 } from '@/hooks/useGsapAnimation'
 import { Code2, Globe, Palette, Rocket, Terminal, Zap } from 'lucide-react'
 import SkillBar from '../features/SkillBar'
+import { memo, useMemo } from 'react'
 
-const Skills = () => {
+const Skills = memo(() => {
 	const titleRef = useScrollAnimation('slideUp')
 	const barsRef = useScrollAnimation('fadeIn')
 	const cardsRef = useStaggerAnimation()
 	const techStackRef = useStaggerAnimation()
 
-	const mainSkills = [
+	const mainSkills = useMemo(() => [
 		{ name: 'React & Next.js', level: 90 },
 		{ name: 'Angular', level: 85 },
 		{ name: 'TypeScript', level: 90 },
@@ -24,9 +25,9 @@ const Skills = () => {
 		{ name: 'Build Tools (Vite, Webpack)', level: 85 },
 		{ name: 'Docker & Git', level: 80 },
 		{ name: 'Testing (Vitest, Jest, Playwright)', level: 75 },
-	]
+	], [])
 
-	const techStack = {
+	const techStack = useMemo(() => ({
 		react: {
 			icon: Terminal,
 			title: 'React Ecosystem',
@@ -148,14 +149,14 @@ const Skills = () => {
 				'Testing Library',
 			],
 		},
-	}
+	}), [])
 
 	return (
 		<section className='relative pt-20 pb-8 bg-gradient-to-b from-background via-background to-background/95 overflow-hidden'>
 			{/* Декоративные элементы фона */}
 			<div className='absolute inset-0 overflow-hidden pointer-events-none'>
-				<div className='absolute top-20 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl animate-pulse' />
-				<div className='absolute bottom-20 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse delay-1000' />
+				<div className='absolute top-20 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl will-change-transform' style={{ animation: 'pulse 4s ease-in-out infinite' }} />
+				<div className='absolute bottom-20 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl will-change-transform' style={{ animation: 'pulse 4s ease-in-out 1s infinite' }} />
 				<div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-primary/5 to-accent/5 rounded-full blur-3xl' />
 			</div>
 
@@ -201,6 +202,8 @@ const Skills = () => {
 			</div>
 		</section>
 	)
-}
+})
+
+Skills.displayName = 'Skills'
 
 export default Skills

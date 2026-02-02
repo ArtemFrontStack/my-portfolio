@@ -5,16 +5,20 @@ import {useParallax} from '@/hooks/useParallax'
 import {useTypingEffect} from '@/hooks/useTypingEffect'
 import {Github, Mail, MessageCircle, Sparkles} from 'lucide-react'
 import {useNavigate} from 'react-router-dom'
+import {memo, useCallback, useMemo} from 'react'
 
-const Hero = () => {
+const Hero = memo(() => {
 	const navigate = useNavigate()
+	
+	const typingStrings = useMemo(() => [
+		'создаю крутые сайты',
+		'воплощаю идеи в код',
+		'делаю веб красивым',
+		'решаю ваши задачи',
+	], [])
+	
 	const { displayedText, isComplete } = useTypingEffect(
-		[
-			'создаю крутые сайты',
-			'воплощаю идеи в код',
-			'делаю веб красивым',
-			'решаю ваши задачи',
-		],
+		typingStrings,
 		100,
 		500,
 		50,
@@ -26,12 +30,20 @@ const Hero = () => {
 	const buttonsRef = useScrollAnimation('slideUp')
 	const socialRef = useScrollAnimation('scale')
 
-	const scrollToContent = () => {
+	const handleNavigateProjects = useCallback(() => {
+		navigate('/projects')
+	}, [navigate])
+
+	const handleNavigateContact = useCallback(() => {
+		navigate('/contact')
+	}, [navigate])
+
+	const scrollToContent = useCallback(() => {
 		window.scrollTo({
 			top: window.innerHeight,
 			behavior: 'smooth',
 		})
-	}
+	}, [])
 
 	return (
 
@@ -46,8 +58,8 @@ const Hero = () => {
 		>
 			{/* Декоративные элементы */}
 			<div className='absolute inset-0 overflow-hidden pointer-events-none'>
-				<div className='absolute top-10 sm:top-20 left-5 sm:left-10 w-48 sm:w-72 h-48 sm:h-72 bg-primary/10 rounded-full blur-3xl animate-pulse' />
-				<div className='absolute bottom-10 sm:bottom-20 right-5 sm:right-10 w-64 sm:w-96 h-64 sm:h-96 bg-accent/10 rounded-full blur-3xl animate-pulse delay-1000' />
+				<div className='absolute top-10 sm:top-20 left-5 sm:left-10 w-48 sm:w-72 h-48 sm:h-72 bg-primary/10 rounded-full blur-3xl will-change-transform' style={{ animation: 'pulse 3s ease-in-out infinite' }} />
+				<div className='absolute bottom-10 sm:bottom-20 right-5 sm:right-10 w-64 sm:w-96 h-64 sm:h-96 bg-accent/10 rounded-full blur-3xl will-change-transform' style={{ animation: 'pulse 3s ease-in-out 1s infinite' }} />
 				<div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-gradient-to-r from-primary/5 to-accent/5 rounded-full blur-3xl' />
 			</div>
 
@@ -106,18 +118,18 @@ const Hero = () => {
 						<Button
 							size='lg'
 							className='group relative overflow-hidden bg-gradient-to-r from-primary via-accent to-primary bg-size-200 hover:bg-pos-100 text-white font-semibold shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/50 transition-all duration-500 h-11 sm:h-12 md:h-14 text-sm sm:text-base md:text-lg px-6 sm:px-8 w-full sm:w-auto'
-							onClick={() => navigate('/projects')}
-						>
-							<span className='relative z-10 flex items-center justify-center gap-2'>
-								Посмотреть проекты
-								<Sparkles className='w-4 h-4 group-hover:rotate-12 transition-transform' />
-							</span>
-						</Button>
-						<Button
-							size='lg'
-							variant='outline'
-							className='group border-2 border-primary/40 hover:border-primary hover:bg-primary/10 backdrop-blur-sm h-11 sm:h-12 md:h-14 text-sm sm:text-base md:text-lg px-6 sm:px-8 font-semibold transition-all duration-300 w-full sm:w-auto'
-							onClick={() => navigate('/contact')}
+						onClick={handleNavigateProjects}
+					>
+						<span className='relative z-10 flex items-center justify-center gap-2'>
+							Посмотреть проекты
+							<Sparkles className='w-4 h-4 group-hover:rotate-12 transition-transform' />
+						</span>
+					</Button>
+					<Button
+						size='lg'
+						variant='outline'
+						className='group border-2 border-primary/40 hover:border-primary hover:bg-primary/10 backdrop-blur-sm h-11 sm:h-12 md:h-14 text-sm sm:text-base md:text-lg px-6 sm:px-8 font-semibold transition-all duration-300 w-full sm:w-auto'
+						onClick={handleNavigateContact}
 						>
 							<span className='flex items-center justify-center gap-2'>
 								Связаться со мной
@@ -161,6 +173,8 @@ const Hero = () => {
 
 		</section>
 	)
-}
+})
+
+Hero.displayName = 'Hero'
 
 export default Hero
