@@ -128,6 +128,7 @@ const About = () => {
 			'React Hook Form',
 			'Recharts',
 			'Framer Motion',
+			'GSAP',
 		],
 		angular: [
 			'Angular 19',
@@ -137,6 +138,7 @@ const About = () => {
 			'Angular Signals',
 			'Standalone Components',
 			'Angular Universal',
+			'Angular CDK',
 		],
 		styling: [
 			'Tailwind CSS v4',
@@ -144,14 +146,19 @@ const About = () => {
 			'shadcn/ui',
 			'CSS Modules',
 			'Styled Components',
+			'SCSS/SASS',
 		],
 		backend: [
-			'Apollo GraphQL',
-			'tRPC',
+			'NestJS',
+			'Express',
+			'PostgreSQL',
+			'MongoDB',
 			'Prisma',
-			'Drizzle ORM',
+			'TypeORM',
 			'REST APIs',
+			'GraphQL',
 			'WebSockets',
+			'JWT Auth',
 		],
 		tools: [
 			'Vite 6',
@@ -162,6 +169,7 @@ const About = () => {
 			'Vitest',
 			'Playwright',
 			'Docker',
+			'Git & GitHub',
 		],
 	}
 
@@ -206,8 +214,8 @@ const About = () => {
 
 							{/* Описание */}
 							<p className='text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-8'>
-								Frontend разработчик, специализирующийся на{' '}
-								<strong>React</strong> и <strong>Angular</strong>, создаю
+								Fullstack разработчик, специализирующийся на{' '}
+								<strong>React</strong>, <strong>Angular</strong>, <strong>NestJS</strong> и <strong>Express</strong>, создаю
 								красивые и функциональные веб-приложения
 							</p>
 
@@ -221,9 +229,9 @@ const About = () => {
 							{/* Статистика быстрого просмотра */}
 							<div className='grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 max-w-3xl mx-auto'>
 								{[
-									{ value: '1+', label: 'Года опыта' },
-									{ value: '20+', label: 'Проектов' },
-									{ value: '20+', label: 'Технологий' },
+									{ value: '2+', label: 'Года опыта' },
+									{ value: '50+', label: 'Проектов' },
+									{ value: '40+', label: 'Технологий' },
 									{ value: '100%', label: 'Энтузиазма' },
 								].map((stat, index) => (
 									<div
@@ -256,7 +264,7 @@ const About = () => {
 											Привет! Я Артём
 										</h3>
 										<p className='text-muted-foreground'>
-											Junior Frontend Developer
+											Fullstack разработчик
 										</p>
 									</div>
 								</div>
@@ -265,20 +273,20 @@ const About = () => {
 										🚀 Создаю современные веб-приложения, которые не только
 										отлично работают, но и приятны в использовании. Моя
 										специализация —{' '}
-										<span className='text-primary font-semibold'>React</span> и{' '}
-										<span className='text-primary font-semibold'>Angular</span>с
-										полным стеком современных инструментов.
+										<span className='text-primary font-semibold'>React</span>,{' '}
+										<span className='text-primary font-semibold'>Angular</span>,{' '}
+										<span className='text-primary font-semibold'>NestJS</span> и{' '}
+										<span className='text-primary font-semibold'>Express</span>.
 									</p>
 									<p>
-										💡 Работаю с экосистемой React (Redux Toolkit, Zustand,
-										TanStack Query) и Angular (NgRx, RxJS, Angular Signals).
-										Пишу типобезопасный код на
-										<strong> TypeScript</strong>, использую GraphQL и REST API.
+										💡 На бэкенде разрабатываю API с помощью <strong>NestJS</strong> и <strong>Express</strong>,
+										работаю с базами данных (PostgreSQL, MongoDB), использую Prisma и TypeORM.
+										Реализую REST API, GraphQL, WebSockets и JWT аутентификацию.
 									</p>
 									<p>
-										🎨 Создаю красивые интерфейсы с помощью Tailwind CSS,
-										Material UI, Shadcn/ui. Настраиваю современную сборку (Vite,
-										Webpack) и слежу за качеством кода.
+										🎨 На фронтенде создаю красивые интерфейсы с помощью Tailwind CSS,
+										Material UI, Shadcn/ui. Работаю с React (Redux Toolkit, Zustand, TanStack Query)
+										и Angular (NgRx, RxJS, Angular Signals). Настраиваю современную сборку (Vite, Webpack).
 									</p>
 									<p>
 										✨ Стремлюсь писать чистый, понятный код и постоянно изучаю

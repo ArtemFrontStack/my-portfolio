@@ -18,22 +18,22 @@ const Timeline = () => {
 		{
 			type: 'work',
 			icon: Briefcase,
-			title: 'Frontend Developer',
+			title: 'Fullstack разработчик',
 			organization: 'Фриланс',
 			period: '2023 - настоящее время',
 			description:
-				'Разработка современных веб-приложений с использованием React, TypeScript и современных фреймворков',
+				'Fullstack разработка веб-приложений: React, Angular, NestJS, Express. Работа с PostgreSQL, MongoDB, REST API, GraphQL',
 			color: 'border-purple-500',
 			bgColor: 'bg-purple-500/10',
 		},
 		{
 			type: 'education',
 			icon: GraduationCap,
-			title: 'Онлайн курсы по Frontend разработке',
+			title: 'Онлайн курсы по Fullstack разработке',
 			organization: 'Различные платформы',
 			period: '2022 - 2023',
 			description:
-				'Изучение React, TypeScript, Next.js и современных инструментов разработки',
+				'Изучение React, Angular, TypeScript, NestJS, Express, баз данных и современных инструментов fullstack разработки',
 			color: 'border-green-500',
 			bgColor: 'bg-green-500/10',
 		},

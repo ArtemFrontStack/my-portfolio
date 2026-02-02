@@ -69,7 +69,7 @@ const PageLoader = () => {
 					<h2 className='text-2xl sm:text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2'>
 						Артём
 					</h2>
-					<p className='text-sm text-muted-foreground'>Frontend Developer</p>
+					<p className='text-sm text-muted-foreground'>Fullstack Developer</p>
 				</div>
 
 				{/* Процент загрузки */}

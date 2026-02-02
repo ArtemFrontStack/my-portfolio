@@ -216,6 +216,30 @@ const TechCloud = () => {
 			color: 'text-[#339933]',
 		},
 		{
+			name: 'NestJS',
+			level: 'advanced',
+			size: 'text-xl sm:text-2xl md:text-3xl',
+			color: 'text-[#E0234E]',
+		},
+		{
+			name: 'Express',
+			level: 'advanced',
+			size: 'text-lg sm:text-xl md:text-2xl',
+			color: 'text-[#000000] dark:text-white',
+		},
+		{
+			name: 'PostgreSQL',
+			level: 'advanced',
+			size: 'text-lg sm:text-xl md:text-2xl',
+			color: 'text-[#336791]',
+		},
+		{
+			name: 'MongoDB',
+			level: 'advanced',
+			size: 'text-lg sm:text-xl md:text-2xl',
+			color: 'text-[#47A248]',
+		},
+		{
 			name: 'Prisma',
 			level: 'intermediate',
 			size: 'text-base sm:text-lg md:text-xl',

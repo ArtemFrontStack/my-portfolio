@@ -1,12 +1,14 @@
 import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
+import {Input} from '@/components/ui/input'
+import {MultiSelect} from '@/components/ui/multi-select'
 import {useScrollAnimation, useStaggerAnimation} from '@/hooks/useGsapAnimation'
 import {useTilt} from '@/hooks/useTilt'
-import {Briefcase, Code2, ExternalLink, Github} from 'lucide-react'
+import {Briefcase, Code2, ExternalLink, Github, Search, X} from 'lucide-react'
 import {useState} from 'react'
 import ProjectModal from '../features/ProjectModal'
-import {ProjectService} from "@/services/projectService.ts"
-import {Project} from "@/types/project.ts"
+import {ProjectService} from "@/services/projectService"
+import {Project} from "@/types/project"
 import {useQuery} from '@tanstack/react-query'
 
 // Типизация пропсов ProjectCard
@@ -165,7 +167,8 @@ const ProjectCardSkeleton = () => (
 
 const Projects = () => {
 	const [selectedProject, setSelectedProject] = useState<Project | null>(null)
-	const [filter, setFilter] = useState<string>('All')
+	const [selectedTags, setSelectedTags] = useState<string[]>([])
+	const [searchQuery, setSearchQuery] = useState<string>('')
 	const titleRef = useScrollAnimation('slideUp')
 	const filterRef = useScrollAnimation('fadeIn')
 	const projectsRef = useStaggerAnimation()
@@ -179,7 +182,7 @@ const Projects = () => {
 	} = useQuery<Project[], Error>({
 		queryKey: ['projects'],
 		queryFn: async () => {
-			const data = await ProjectService.getAllProjects(12) // лимит 12
+			const data = await ProjectService.getAllProjects(100) // Увеличиваем лимит, чтобы фильтрация работала корректно на клиенте
 			return data
 		},
 		staleTime: 10 * 60 * 1000, // 10 минут
@@ -190,9 +193,17 @@ const Projects = () => {
 		refetchOnMount: false
 	})
 
-	const allTags = ['All', ...Array.from(new Set(projects.flatMap(p => p.tags)))]
-	const filteredProjects =
-		filter === 'All' ? projects : projects.filter(p => p.tags.includes(filter))
+	const allTags = Array.from(new Set(projects.flatMap(p => p.tags)))
+	
+	const filteredProjects = projects.filter(project => {
+		const matchesFilter = selectedTags.length === 0 || selectedTags.some(tag => project.tags.includes(tag))
+		const matchesSearch = 
+			project.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+			project.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+			project.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+		
+		return matchesFilter && matchesSearch
+	})
 
 	if (error) {
 		return (
@@ -243,19 +254,41 @@ const Projects = () => {
 						</div>
 					</div>
 
-					{/* Фильтр по тегам */}
+					{/* Панель фильтрации */}
 					{!isLoading && !isFetching && (
-					<div ref={filterRef} className='flex flex-wrap justify-center gap-2 mb-10'>
-						{allTags.map(tag => (
-							<Button
-								key={tag}
-								variant={filter === tag ? 'default' : 'outline'}
-								className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${filter === tag ? 'bg-primary text-white' : 'bg-card text-primary border-primary/20 hover:bg-primary/10'}`}
-								onClick={() => setFilter(tag)}
-							>
-								{tag}
-							</Button>
-						))}
+					<div ref={filterRef} className='mb-10 space-y-6'>
+						{/* Поиск */}
+						<div className="relative max-w-md mx-auto">
+							<div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+								<Search className="h-5 w-5 text-muted-foreground" />
+							</div>
+							<Input
+								type="text"
+								placeholder="Поиск проектов..."
+								className="pl-10 pr-10 py-6 rounded-full bg-card/50 border-primary/20 focus:border-primary focus:ring-primary/20 transition-all text-lg"
+								value={searchQuery}
+								onChange={(e) => setSearchQuery(e.target.value)}
+							/>
+							{searchQuery && (
+								<button 
+									className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground"
+									onClick={() => setSearchQuery('')}
+								>
+									<X className="h-5 w-5" />
+								</button>
+							)}
+						</div>
+
+						{/* MultiSelect для тегов */}
+						<div className='max-w-md mx-auto'>
+							<MultiSelect
+								options={allTags}
+								selected={selectedTags}
+								onChange={setSelectedTags}
+								placeholder="Выберите технологии..."
+								className="bg-card/50 border-primary/20 hover:border-primary/40"
+							/>
+						</div>
 					</div>)}
 					{/* Projects Grid */}
 					<div

@@ -50,7 +50,7 @@ const Footer = () => {
 									{'<Артём Dev />'}
 								</h3>
 								<p className='text-xs text-muted-foreground mt-1'>
-									Frontend Developer
+									Fullstack Developer
 								</p>
 							</Link>
 						</div>

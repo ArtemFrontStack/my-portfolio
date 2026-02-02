@@ -88,11 +88,13 @@ const Hero = () => {
 
 						<p className='text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground mb-6 sm:mb-8 md:mb-10 max-w-3xl mx-auto leading-relaxed px-2'>
 							<span className='font-semibold text-foreground/90'>
-								Frontend разработчик
+								Fullstack разработчик
 							</span>
 							, специализируюсь на{' '}
-							<span className='text-primary font-bold'>React</span> и{' '}
-							<span className='text-primary font-bold'>Angular</span>, превращаю
+							<span className='text-primary font-bold'>React</span>,{' '}
+							<span className='text-primary font-bold'>Angular</span>,{' '}
+							<span className='text-primary font-bold'>NestJS</span> и{' '}
+							<span className='text-primary font-bold'>Express</span>, превращаю
 							идеи в современные и красивые веб-приложения
 						</p>
 					</div>
